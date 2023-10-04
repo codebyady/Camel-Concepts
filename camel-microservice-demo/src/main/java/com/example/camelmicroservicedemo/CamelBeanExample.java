@@ -20,7 +20,7 @@ public class CamelBeanExample {
         });
 
         // Create an instance of the MyBean class
-        MyBean myBean = new MyBean();
+        MyBean2 myBean = new MyBean2();
 
         // Set the Camel context to use this instance as a bean
         context.getRegistry().bind("myBean", myBean);
@@ -33,7 +33,7 @@ public class CamelBeanExample {
     }
 }
 
-class MyBean {
+class MyBean2 {
     public void processMessage(String message) {
         // You can perform any processing on the message here
         System.out.println("Received message: " + message);
