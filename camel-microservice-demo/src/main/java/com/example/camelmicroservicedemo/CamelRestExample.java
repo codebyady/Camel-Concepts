@@ -26,7 +26,8 @@ public class CamelRestExample {
 
                 from("rest:post:/hellopost") // Listen for POST requests at /post
                         .log("Received POST request with body: ${body}") // Log the POST request body
-                        .to("log:jsonLog");
+                        //.to("log:jsonLog");
+                        .to("file:src/main/java/com/example/camelmicroservicedemo/output?fileName=postRequest.txt");
             }
 
         });
