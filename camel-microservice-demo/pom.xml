@@ -63,6 +63,17 @@
 			<artifactId>camel-spring-boot-starter</artifactId>
 			<version>4.0.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-jdbc</artifactId>
+			<version>4.0.1</version>
+			<!-- use the same version as your Camel core version -->
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>8.0.33</version>
+		</dependency>
 	</dependencies>
 
 	<build>
