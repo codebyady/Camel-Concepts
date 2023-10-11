@@ -1,38 +1,41 @@
 package com.example.camelmicroservicedemo;
 
-import org.apache.camel.CamelContext;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.model.rest.RestBindingMode;
+        import org.apache.camel.CamelContext;
+        import org.apache.camel.builder.RouteBuilder;
+        import org.apache.camel.component.http.HttpComponent;
+        import org.apache.camel.impl.DefaultCamelContext;
 
 public class CamelRestExample {
     public static void main(String[] args) throws Exception {
         // Create a Camel context
         CamelContext context = new DefaultCamelContext();
 
-        // Define a route using RouteBuilder with REST configuration
+        // Configure HTTP component
+        HttpComponent httpComponent = context.getComponent("http", HttpComponent.class);
+
+        // Define a REST endpoint at /hello
+//                from("rest:get:/hello").setBody(constant("Hello, World!"))// Listen for GET requests at /hello
+//                        .to("log:jsonLog"); // Log the request
+//
+//                from("rest:post:/hellopost") // Listen for POST requests at /post
+//                        .log("Received POST request with body: ${body}") // Log the POST request body
+//                        //.to("log:jsonLog");
+//                        .to("file:src/main/java/com/example/camelmicroservicedemo/output?fileName=postRequest.txt");
+
+        // Define a route using RouteBuilder
         context.addRoutes(new RouteBuilder() {
             @Override
             public void configure() throws Exception {
-                // Configure Jetty component for REST
-                restConfiguration()
-                        .component("jetty")
-                        .host("localhost")
-                        .port(8080);
+                from("timer:myTimer?period=5000")
+                        .to("direct:startRoute");
 
-                // Define a REST endpoint at /hello
-                from("rest:get:/hello").setBody(constant("Hello, World!"))// Listen for GET requests at /hello
-                        .to("log:jsonLog"); // Log the request
-
-                from("rest:post:/hellopost") // Listen for POST requests at /post
-                        .log("Received POST request with body: ${body}") // Log the POST request body
-                        //.to("log:jsonLog");
-                        .to("file:src/main/java/com/example/camelmicroservicedemo/output?fileName=postRequest.txt");
+                from("direct:startRoute") // Start of your route
+                        .to("http://localhost:8085/demo/getExample") // HTTP GET call to the REST endpoint
+                        .log("Response from REST service: ${body}") // Log the response
+                        .to("direct:endRoute");
             }
-
         });
 
-        System.out.println("Listening to http://localhost:8080/hello");
         // Start the Camel context
         context.start();
 
@@ -43,3 +46,4 @@ public class CamelRestExample {
         context.stop();
     }
 }
+
